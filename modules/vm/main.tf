@@ -1,5 +1,5 @@
 resource "azurerm_network_interface" "main" {
-  name = "${var.component}-nic"
+  name = "${var.component}-${var.env}-nic"
   location = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
 
@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "main" {
   }
 }
 resource "azurerm_network_security_group" "main" {
-  name                = "${var.component}-nsg"
+  name                = "${var.component}-${var.env}-nsg"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
 
@@ -34,7 +34,7 @@ resource "azurerm_network_interface_security_group_association" "main" {
 }
 
 resource "azurerm_public_ip" "main" {
-  name = "${var.component}-pip"
+  name = "${var.component}-${var.env}-pip"
   location = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   allocation_method = "Static"
@@ -42,7 +42,7 @@ resource "azurerm_public_ip" "main" {
   ip_version = "IPv4"
 }
 resource "azurerm_virtual_machine" "main" {
-  name                  = var.component
+  name                  = "${var.component}-${var.env}"
   location              = data.azurerm_resource_group.main.location
   resource_group_name   = data.azurerm_resource_group.main.name
   network_interface_ids = [azurerm_network_interface.main.id]
@@ -61,13 +61,13 @@ resource "azurerm_virtual_machine" "main" {
     version   = "9.4.2025040316" #exact version from az vm show
   }
   storage_os_disk {
-    name              = var.component
+    name              = "${var.component}-${var.env}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = var.component
+    computer_name  = "${var.component}-${var.env}"
     admin_username = "azureuser"
     admin_password = "azureuser@123"
   }
@@ -119,7 +119,7 @@ resource "null_resource" "install_tools" {
 
 ##For Create an A record in DNS server
 resource "azurerm_dns_a_record" "main" {
-  name                = "${var.component}-dev"                       # subdomain (www.example.com)
+  name                = "${var.component}-${var.env}"                       # subdomain (www.example.com)
   zone_name           = "azdevopsvenkat.site"
   resource_group_name = data.azurerm_resource_group.main.name
   ttl                 = 10                          # time-to-live in seconds
