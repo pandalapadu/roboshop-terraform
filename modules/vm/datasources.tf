@@ -6,3 +6,7 @@ data "azurerm_subnet" "main" {
   resource_group_name  = data.azurerm_resource_group.main.name
   virtual_network_name = "vNET-eCommerce"
 }
+# Read secret from Vault KV v2
+data "vault_kv_secret_v2" "ssh" {
+  path = "infra/ssh"
+}

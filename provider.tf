@@ -4,6 +4,14 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.49"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.3.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "2.5.3"
+    }
   }
 }
 provider "azurerm" {
@@ -13,3 +21,9 @@ provider "azurerm" {
 terraform {
   backend "azurerm" { }
 }
+
+provider "vault" {
+  address = "http://vault-internal.azdevopsvenkat.site:8200"
+  token   = var.token
+}
+

@@ -111,8 +111,8 @@ resource "null_resource" "install_tools" {
 
     connection {
       type        = "ssh"
-      user        = "azureuser"
-      password    = "azureuser@123"
+      user        = var.admin_username
+      password    = var.admin_password
       host        = azurerm_public_ip.main.ip_address
     }
   }
